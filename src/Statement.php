@@ -255,13 +255,22 @@ class Statement
 
         $isJSONCompact=(stripos($this->format,'JSONCompact')!==false?true:false);
         $this->array_data = [];
+        $keys = array_column($this->meta, 'name');
         foreach ($data as $rows) {
             $r = [];
 
 
             if ($isJSONCompact)
             {
-                $r[]=$rows;
+                if (null === $keys) {
+                    print_r(
+                        $rows,
+                        $data,
+                        $keys
+                    );
+                    exit();
+                }
+                $r=array_combine($keys, $rows);
             }
             else {
                 foreach ($this->meta as $meta) {
@@ -272,6 +281,9 @@ class Statement
             $this->array_data[] = $r;
         }
 
+        if ($isJSONCompact && $this->totals) {
+            $this->totals = array_combine($keys, $this->totals);
+        }
 
         return true;
     }

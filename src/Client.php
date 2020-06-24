@@ -748,6 +748,7 @@ class Client
             ) USING ( table,database )
             WHERE database=:database
             GROUP BY table,database
+            SETTINGS joined_subquery_requires_alias=0
         ',
             ['database' => $this->settings()->getDatabase()]);
 

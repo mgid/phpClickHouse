@@ -535,7 +535,7 @@ class Http
             return $this->getRequestWrite($sql);
         }
         $query = $this->prepareQuery($sql, $bindings);
-        $query->setFormat('JSON');
+        $query->setFormat('JSONCompact');
         return $this->getRequestRead($query, $whereInFile, $writeToFile);
     }
 
