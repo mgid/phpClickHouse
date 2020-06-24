@@ -16,9 +16,6 @@ final class JsonTest extends TestCase
 
     public function testJSONEachRow()
     {
-
-
-
         $state=$this->client->select('SELECT sin(number) as sin,cos(number) as cos FROM {table_name} LIMIT 2 FORMAT JSONEachRow', ['table_name'=>'system.numbers']);
         $checkString='{"sin":0,"cos":1}';
         $this->assertContains($checkString,$state->rawData());
@@ -27,8 +24,9 @@ final class JsonTest extends TestCase
         $state=$this->client->select('SELECT round(4+sin(number),2) as sin,round(4+cos(number),2) as cos FROM {table_name} LIMIT 2 FORMAT JSONCompact', ['table_name'=>'system.numbers']);
 
         $re=[
-                [[4,5]],
-                [[4.84,4.54]]
+
+                ['sin' => 4, 'cos' => 5],
+                ['sin' => 4.84, 'cos' => 4.54]
             ];
 
 //        print_r($state->rows());

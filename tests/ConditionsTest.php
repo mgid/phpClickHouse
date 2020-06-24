@@ -31,10 +31,10 @@ final class ConditionsTest extends TestCase
 
     private function condTest($sql,$equal)
     {
-        $equal=$equal.' FORMAT JSON';
+        $equal=$equal.' FORMAT JSONCompact';
         $input_params=$this->getInputParams();
 //        echo "-----\n".$this->client->selectAsync($sql, $input_params)->sql()."\n----\n";
-        
+
         $this->assertEquals($equal,$this->client->selectAsync($sql, $input_params)->sql());
 
 
@@ -180,34 +180,34 @@ final class ConditionsTest extends TestCase
         ];
 
         $this->assertEquals(
-            'SELECT * FROM table_x_y FORMAT JSON',
+            'SELECT * FROM table_x_y FORMAT JSONCompact',
             $this->client->selectAsync('SELECT * FROM {from_table}', $input_params)->sql()
         );
 
         $this->assertEquals(
-            'SELECT * FROM table_x_y WHERE event_date IN (\'2000-10-10\',\'2000-10-11\',\'2000-10-12\') FORMAT JSON',
+            'SELECT * FROM table_x_y WHERE event_date IN (\'2000-10-10\',\'2000-10-11\',\'2000-10-12\') FORMAT JSONCompact',
             $this->client->selectAsync('SELECT * FROM {from_table} WHERE event_date IN (:select_date)', $input_params)->sql()
         );
 
         $this->client->enableQueryConditions();
 
         $this->assertEquals(
-            'SELECT * FROM ZZZ LIMIT 5 FORMAT JSON',
+            'SELECT * FROM ZZZ LIMIT 5 FORMAT JSONCompact',
             $this->client->selectAsync('SELECT * FROM ZZZ {if limit}LIMIT {limit}{/if}', $input_params)->sql()
         );
 
         $this->assertEquals(
-            'SELECT * FROM ZZZ NOOPE FORMAT JSON',
+            'SELECT * FROM ZZZ NOOPE FORMAT JSONCompact',
             $this->client->selectAsync('SELECT * FROM ZZZ {if nope}LIMIT {limit}{else}NOOPE{/if}', $input_params)->sql()
         );
         $this->assertEquals(
-            'SELECT * FROM 0 FORMAT JSON',
+            'SELECT * FROM 0 FORMAT JSONCompact',
             $this->client->selectAsync('SELECT * FROM :idid', $input_params)->sql()
         );
 
 
         $this->assertEquals(
-            'SELECT * FROM  FORMAT JSON',
+            'SELECT * FROM  FORMAT JSONCompact',
             $this->client->selectAsync('SELECT * FROM :false', $input_params)->sql()
         );
 
@@ -221,7 +221,7 @@ final class ConditionsTest extends TestCase
         ];
 
         $this->assertEquals(
-            '|ZERO||  FORMAT JSON',
+            '|ZERO||  FORMAT JSONCompact',
             $this->client->selectAsync('{if FALSE}FALSE{/if}|{if ZERO}ZERO{/if}|{if NULL}NULL{/if}| ' ,$isset)->sql()
         );
 
@@ -232,12 +232,12 @@ final class ConditionsTest extends TestCase
 
     public function testSqlDisableConditions()
     {
-        $this->assertEquals('SELECT * FROM ZZZ {if limit}LIMIT {limit}{/if} FORMAT JSON',  $this->client->selectAsync('SELECT * FROM ZZZ {if limit}LIMIT {limit}{/if}', [])->sql());
-        $this->assertEquals('SELECT * FROM ZZZ {if limit}LIMIT 123{/if} FORMAT JSON',  $this->client->selectAsync('SELECT * FROM ZZZ {if limit}LIMIT {limit}{/if}', ['limit'=>123])->sql());
+        $this->assertEquals('SELECT * FROM ZZZ {if limit}LIMIT {limit}{/if} FORMAT JSONCompact',  $this->client->selectAsync('SELECT * FROM ZZZ {if limit}LIMIT {limit}{/if}', [])->sql());
+        $this->assertEquals('SELECT * FROM ZZZ {if limit}LIMIT 123{/if} FORMAT JSONCompact',  $this->client->selectAsync('SELECT * FROM ZZZ {if limit}LIMIT {limit}{/if}', ['limit'=>123])->sql());
         $this->client->cleanQueryDegeneration();
-        $this->assertEquals('SELECT * FROM ZZZ {if limit}LIMIT {limit}{/if} FORMAT JSON',  $this->client->selectAsync('SELECT * FROM ZZZ {if limit}LIMIT {limit}{/if}', ['limit'=>123])->sql());
+        $this->assertEquals('SELECT * FROM ZZZ {if limit}LIMIT {limit}{/if} FORMAT JSONCompact',  $this->client->selectAsync('SELECT * FROM ZZZ {if limit}LIMIT {limit}{/if}', ['limit'=>123])->sql());
         $this->restartClickHouseClient();
-        $this->assertEquals('SELECT * FROM ZZZ {if limit}LIMIT 123{/if} FORMAT JSON',  $this->client->selectAsync('SELECT * FROM ZZZ {if limit}LIMIT {limit}{/if}', ['limit'=>123])->sql());
+        $this->assertEquals('SELECT * FROM ZZZ {if limit}LIMIT 123{/if} FORMAT JSONCompact',  $this->client->selectAsync('SELECT * FROM ZZZ {if limit}LIMIT {limit}{/if}', ['limit'=>123])->sql());
 
 
     }
